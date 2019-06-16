@@ -17,10 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,5 +113,37 @@ public class RestaurantController {
         return new ResponseEntity<>(restaurantEntity,HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.GET, path = "/api/restaurant/{restaurant_id}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<RestaurantEntity> getRestaurantByRestaurantId(@PathVariable("restaurant_id")
+                                                                                    String restaurantId) throws RestaurantNotFoundException {
+        if(StringUtils.isEmpty(restaurantId)){
+            throw new RestaurantNotFoundException("RNF-002","Restaurant id field should not be empty");
+        }
+        RestaurantEntity restaurantEntity=restaurantBusinessService.getRestaurantByRestaurantId(restaurantId);
+
+        if(restaurantEntity==null){
+            throw new RestaurantNotFoundException("RNF-001","No restaurant by this id");
+        }
+        return new ResponseEntity<>(restaurantEntity,HttpStatus.OK);
+    }
+
+    //TODO after authorization of customer
+  /*  @RequestMapping(method = RequestMethod.PUT, path = "/api/restaurant/{restaurant_id}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<RestaurantEntity> getRestaurantByRestaurantId(@PathVariable("restaurant_id")
+                                                                                String restaurantId,
+                                                                        @RequestParam("customer_rating") double customerRating,
+                                                                        @RequestHeader("token") String token) throws RestaurantNotFoundException {
+        if(StringUtils.isEmpty(restaurantId)){
+            throw new RestaurantNotFoundException("RNF-002","Restaurant id field should not be empty");
+        }
+        RestaurantEntity restaurantEntity=restaurantBusinessService.getRestaurantByRestaurantId(restaurantId);
+
+        if(restaurantEntity==null){
+            throw new RestaurantNotFoundException("RNF-001","No restaurant by this id");
+        }
+        return new ResponseEntity<>(restaurantEntity,HttpStatus.OK);
+    }*/
 
 }

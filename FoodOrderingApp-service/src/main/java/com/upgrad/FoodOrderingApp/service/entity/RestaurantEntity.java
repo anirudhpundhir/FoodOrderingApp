@@ -18,14 +18,15 @@ import java.util.UUID;
 @Table(name = "restaurant")
 @NamedQueries(
         {
+                @NamedQuery(name="getRestaurantById",query = "select r from RestaurantEntity r " +
+                        "where r.uuid=:uuid"),
                 @NamedQuery(name = "allRestaurants", query = "select r from " +
                         "RestaurantEntity r order by r.customerRating desc"),
                 @NamedQuery(name="getRestaurantByName",query = "select r from RestaurantEntity r " +
                         "where r.restaurantName=:restaurantName"),
-                @NamedQuery(name="getRestaurantByCategoryId",query = "select r from RestaurantEntity r " +
-                        " where r.id in :" +
-                        "select rc.restaurantId from RestaurantCategory rc where category_id=(\n" +
-                        "select id from category where uuid='2ddf5546-ecd0-11e8-8eb2-f2801f1b9fd1') order by 1)"),
+                @NamedQuery(name = "allRestaurantBycategory" , query = "select r from RestaurantEntity r  " +
+                        "INNER JOIN RestaurantCategoryEntity rc on r.id = rc.restaurant " +
+                        "INNER JOIN CategoryEntity c on rc.category = c.id Where c.uuid =:uuid")
         }
 )
 

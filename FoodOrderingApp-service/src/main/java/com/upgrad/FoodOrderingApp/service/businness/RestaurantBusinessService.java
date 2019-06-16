@@ -25,4 +25,8 @@ public class RestaurantBusinessService {
     public List<RestaurantEntity> getRestaurantByCategoryId(String categoryId){
         return restaurantDao.getRestaurantByCategoryId(categoryId);
     }
+
+    public RestaurantEntity getRestaurantByRestaurantId(String restaurantId){
+        return restaurantDao.getRestaurantById(restaurantId);
+    }
 }
