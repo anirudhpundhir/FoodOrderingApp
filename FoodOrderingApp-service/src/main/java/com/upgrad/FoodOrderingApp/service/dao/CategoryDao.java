@@ -35,4 +35,13 @@ public class CategoryDao {
         }
 
     }
+
+    public CategoryEntity getCategoryByUuid(String uuid) {
+        try {
+            return entityManager.createNamedQuery("categoryByUuid", CategoryEntity.class).setParameter("uuid", uuid).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
 }

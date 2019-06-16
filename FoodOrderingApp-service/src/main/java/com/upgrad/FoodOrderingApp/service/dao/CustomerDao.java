@@ -1,6 +1,6 @@
 package com.upgrad.FoodOrderingApp.service.dao;
 
-import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthTokenEntity;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import org.springframework.stereotype.Repository;
 
@@ -10,68 +10,52 @@ import javax.persistence.PersistenceContext;
 
 @Repository
 public class CustomerDao {
-
     @PersistenceContext
     private EntityManager entityManager;
 
+
+    //saves the customer information of the created customer in the database
     public CustomerEntity createCustomer(CustomerEntity customerEntity) {
-        entityManager.persist(customerEntity);
+        this.entityManager.persist(customerEntity);
         return customerEntity;
     }
-
-    public CustomerEntity getCustomerByUuid(final String uuid) {
+    //returns customer with a particular contact number
+    public CustomerEntity getCustomerByContactNumber(String contactNumber) {
         try {
-            return entityManager.createNamedQuery("customerByUuid", CustomerEntity.class).setParameter("uuid", uuid)
-                    .getSingleResult();
-        } catch(NoResultException nre) {
+            return (CustomerEntity)this.entityManager.createNamedQuery("customerByContactNumber", CustomerEntity.class).setParameter("contactNumber", contactNumber).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+    //creates a record in CustomerAuthEntity
+    public CustomerAuthEntity createAuthToken(CustomerAuthEntity customerAuthEntity) {
+        this.entityManager.persist(customerAuthEntity);
+        return customerAuthEntity;
+    }
+    //updates a CustomerEntity
+    public void updateCustomer(CustomerEntity updatedCustomerEntity) {
+    this.entityManager.merge(updatedCustomerEntity);
+   }
+    //retrives a matching record in CustomerAuthEntity according to a particular accessToken
+    public CustomerAuthEntity getCustomerAuthToken(final String accessToken) {
+        try {
+            return entityManager.createNamedQuery("customerAuthTokenByAccessToken", CustomerAuthEntity.class).setParameter("accessToken", accessToken).getSingleResult();
+        } catch (NoResultException nre) {
             return null;
         }
     }
 
-    public CustomerEntity getCustomerByEmail(final String customerEmail) {
+    public CustomerEntity getCustomerByUUID(String uuid) {
         try {
-            return entityManager.createNamedQuery("customerByEmail", CustomerEntity.class).setParameter("email", customerEmail)
-                    .getSingleResult();
-        } catch(NoResultException nre) {
+            return entityManager.createNamedQuery("customerByUUID", CustomerEntity.class).setParameter("uuid", uuid).getSingleResult();
+        } catch (NoResultException nre) {
             return null;
         }
     }
 
-    public CustomerEntity getCustomerByContactNumber(final String customerContactNumber) {
-        try {
-            return entityManager.createNamedQuery("customerByContactNumber", CustomerEntity.class).setParameter("contactNumber", customerContactNumber)
-                    .getSingleResult();
-        } catch(NoResultException nre) {
-            return null;
-        }
+    public CustomerAuthEntity updateCustomerAuth(CustomerAuthEntity customerAuthEntity) {
+        return entityManager.merge(customerAuthEntity);
     }
 
-    ////////////////////////created for customer-login/////////////////////
-    public CustomerAuthTokenEntity createAuthToken(final CustomerAuthTokenEntity customerAuthTokenEntity) {
-        entityManager.persist(customerAuthTokenEntity);
-        return customerAuthTokenEntity;
-    }
 
-    public void updateCustomer(final CustomerEntity updatedCustomerEntity) {
-        entityManager.merge(updatedCustomerEntity);
-    }
-
-    public void updateCustomerAuth(final CustomerAuthTokenEntity customerAuthTokenEntity) {
-        entityManager.merge(customerAuthTokenEntity);
-    }
-
-    public CustomerEntity deleteCustomer(final CustomerEntity customerEntity){
-        entityManager.remove(customerEntity);
-        return customerEntity;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-    public CustomerAuthTokenEntity getCustomerAuthToken(final String accessToken) {
-        try {
-            return entityManager.createNamedQuery("customerAuthTokenByAccessToken", CustomerAuthTokenEntity.class)
-                    .setParameter("accessToken", accessToken).getSingleResult();
-        } catch(NoResultException nre) {
-            return null;
-        }
-    }
 }

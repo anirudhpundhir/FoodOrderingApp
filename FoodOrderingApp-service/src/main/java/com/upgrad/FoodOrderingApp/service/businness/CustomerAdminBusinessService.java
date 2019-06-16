@@ -1,6 +1,7 @@
-package com.upgrad.FoodOrderingApp.service.business;
+package com.upgrad.FoodOrderingApp.service.businness;
 
 import com.upgrad.FoodOrderingApp.service.dao.CustomerDao;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthTokenEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
@@ -27,7 +28,7 @@ public class CustomerAdminBusinessService {
         final ZonedDateTime now = ZonedDateTime.now();
 
         //get the customerAuthToken details from customerDao
-        CustomerAuthTokenEntity customerAuthTokenEntity = customerDao.getCustomerAuthToken(authorizationToken);
+        CustomerAuthEntity customerAuthTokenEntity = customerDao.getCustomerAuthToken(authorizationToken);
 
         // Throw AuthorizationFailedException if the customer is not authorized
         if (customerAuthTokenEntity == null) {
@@ -41,7 +42,7 @@ public class CustomerAdminBusinessService {
         }
 
         //get the customer Details using the customerUuid
-        CustomerEntity customerEntity =  customerDao.getCustomerByUuid(customerAuthTokenEntity.getUuid());
+        CustomerEntity customerEntity =  customerDao.getCustomerByUUID(customerAuthTokenEntity.getUuid());
 
         if (updatedCustomerEntity.getFirstName() == null) {
             throw new UpdateCustomerException("UCR-002", "First name field should not be empty");
@@ -63,7 +64,7 @@ public class CustomerAdminBusinessService {
         final ZonedDateTime now = ZonedDateTime.now();
 
         //get the customerAuthToken details from customerDao
-        CustomerAuthTokenEntity customerAuthTokenEntity = customerDao.getCustomerAuthToken(authorizationToken);
+        CustomerAuthEntity customerAuthTokenEntity = customerDao.getCustomerAuthToken(authorizationToken);
 
         // Throw AuthorizationFailedException if the customer is not authorized
         if (customerAuthTokenEntity == null) {
@@ -77,7 +78,7 @@ public class CustomerAdminBusinessService {
         }
 
         //get the customer Details using the customerUuid
-        CustomerEntity customerEntity =  customerDao.getCustomerByUuid(customerAuthTokenEntity.getUuid());
+        CustomerEntity customerEntity =  customerDao.getCustomerByUUID(customerAuthTokenEntity.getUuid());
 
         if (oldPassword == null || newPassword ==  null) {
             throw new UpdateCustomerException("UCR-003", "No field should be empty");
