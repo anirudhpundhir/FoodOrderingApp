@@ -1,67 +1,90 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "address")
-@NamedQueries(
-        {
-                @NamedQuery(name = "addressById", query = "select a from AddressEntity a where a.id = :id"),
-        }
+@Table(
+        name = "address"
 )
+@NamedQueries({
+        @NamedQuery(name = "addressByAddressUuid", query = "select a from AddressEntity a where a.uuid =:uuid"),//returns address by addressUuid
+        @NamedQuery(name = "allSavedAddresses", query = "select a from AddressEntity a "),//returns all the address records
+        @NamedQuery(name = "addressById", query = "select a from AddressEntity a where a.id =:id")//returns address record for a addressId
+})
 
 public class AddressEntity implements Serializable {
 
     @Id
-    @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(
+            name = "ID"
+    )
+    @GeneratedValue(
+            strategy = GenerationType.IDENTITY
+    )
+    private long id;
 
-    @Column(name = "UUID")
-    @NotNull
-    @Size(max = 200)
+    @Column(
+            name = "UUID"
+    )
+    @Size(
+            max = 200
+    )
     private String uuid;
 
-    @Column(name = "FLAT_BUIL_NUMBER")
-    @NotNull
-    @Size(max = 255)
-    private String flatBldgNumber;
+    @Column(
+            name = "FLAT_BUIL_NUMBER"
+    )
+    //flatBuilNumber can be NULL
+    private String flatBuilNumber;
 
-    @Column(name = "LOCALITY")
-    @NotNull
-    @Size(max = 255)
+    @Column(
+            name = "LOCALITY"
+    )
+    //locality can be NULL
     private String locality;
 
-    @Column(name = "CITY")
-    @NotNull
-    @Size(max = 30)
+    @Column(
+            name = "CITY"
+    )
+    //city can be NULL
+    @Size(
+            max = 30
+    )
     private String city;
 
-    @Column(name = "PINCODE")
-    @NotNull
-    @Size(max = 30)
-    private String pincode;
+    @Column(
+            name = "PINCODE"
+    )
+    //pinCode can be NULL
+    @Size(
+            max = 30
+    )
+    private String pinCode;
 
     @ManyToOne
-    @JoinColumn(name = "STATE_ID")
+    @OnDelete(
+            action = OnDeleteAction.CASCADE
+    )
+    @JoinColumn(
+            name = "STATE_ID"
+    )
     private StateEntity state;
 
-    @Column(name = "ACTIVE")
-    @NotNull
-    private Integer active;
+    @Column(
+            name="ACTIVE"
+    )
+    private Integer  active;
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -74,11 +97,11 @@ public class AddressEntity implements Serializable {
     }
 
     public String getFlatBldgNumber() {
-        return flatBldgNumber;
+        return flatBuilNumber;
     }
 
-    public void setFlatBldgNumber(String flatBldgNumber) {
-        this.flatBldgNumber = flatBldgNumber;
+    public void setFlatBuilNumber(String flatBuilNumber) {
+        this.flatBuilNumber = flatBuilNumber;
     }
 
     public String getLocality() {
@@ -97,12 +120,12 @@ public class AddressEntity implements Serializable {
         this.city = city;
     }
 
-    public String getPincode() {
-        return pincode;
+    public String getPinCode() {
+        return pinCode;
     }
 
-    public void setPincode(String pincode) {
-        this.pincode = pincode;
+    public void setPinCode(String pinCode) {
+        this.pinCode = pinCode;
     }
 
     public StateEntity getState() {
@@ -119,16 +142,16 @@ public class AddressEntity implements Serializable {
 
     public void setActive(Integer active) {
         this.active = active;
+
     }
 
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder().append(this).hashCode();
+    public void setPincode(String pinCode){
+        this.pinCode=pinCode;
     }
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+    public String getPincode(){
+        return pinCode;
     }
+
 
 }

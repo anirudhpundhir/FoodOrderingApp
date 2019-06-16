@@ -1,6 +1,7 @@
-package com.upgrad.FoodOrderingApp.service.business;
+package com.upgrad.FoodOrderingApp.service.businness;
 
 import com.upgrad.FoodOrderingApp.service.dao.CustomerDao;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthTokenEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
@@ -21,7 +22,7 @@ public class LoginAuthenticationService {
     private PasswordCryptographyProvider cryptographyProvider;
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public CustomerAuthTokenEntity authenticate(final String contactNumber , final String password) throws AuthenticationFailedException {
+    public CustomerAuthEntity authenticate(final String contactNumber , final String password) throws AuthenticationFailedException {
         //Call the getCustomerByContactNumber method in CustomerDao class for CustomerDao object and pass contactNumber as argument
         // Receive the value returned by getCustomerByContactNumber() method in CustomerEntity type object(name it as customerEntity)
         CustomerEntity customerEntity = customerDao.getCustomerByContactNumber(contactNumber);
@@ -44,21 +45,21 @@ public class LoginAuthenticationService {
             JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
             //Now CustomerAuthTokenEntity type object is to be persisted in a database
             //Declaring an object customerAuthTokenEntity of type CustomerAuthTokenEntity and setting its attributes
-            CustomerAuthTokenEntity customerAuthTokenEntity = new CustomerAuthTokenEntity();
-            customerAuthTokenEntity.setCustomer(customerEntity);
+            CustomerAuthEntity customerAuthEntity = new CustomerAuthEntity();
+            customerAuthEntity.setCustomer(customerEntity);
             final ZonedDateTime now = ZonedDateTime.now();
             final ZonedDateTime expiresAt = now.plusHours(8);
 
-            customerAuthTokenEntity.setAccessToken(jwtTokenProvider.generateToken(customerAuthTokenEntity.getUuid(), now, expiresAt));
+            customerAuthEntity.setAccessToken(jwtTokenProvider.generateToken(customerAuthEntity.getUuid(), now, expiresAt));
 
-            customerAuthTokenEntity.setLoginAt(now);
-            customerAuthTokenEntity.setExpiresAt(expiresAt);
-            customerAuthTokenEntity.setUuid(customerEntity.getUuid());
+            customerAuthEntity.setLoginAt(now);
+            customerAuthEntity.setExpiresAt(expiresAt);
+            customerAuthEntity.setUuid(customerEntity.getUuid());
 
             //Call the createAuthToken() method in CustomerDao class for customerDao
             //Pass customerAuthTokenEntity as an argument
 
-            customerDao.createAuthToken(customerAuthTokenEntity);
+            customerDao.createAuthToken(customerAuthEntity);
 
             //To update the last login time of customer
             //Carefully read how to update the existing record in a database(will be asked in later Assessments)
@@ -67,7 +68,7 @@ public class LoginAuthenticationService {
             //updateCustomer() method in CustomerDao class calls the merge() method to update the customerEntity
 
             customerDao.updateCustomer(customerEntity);
-            return customerAuthTokenEntity;
+            return customerAuthEntity;
 
         }
         else{
