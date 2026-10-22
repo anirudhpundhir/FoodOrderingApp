@@ -13,7 +13,7 @@
 
     <properties>
         <sql-maven-plugin.version>1.5</sql-maven-plugin.version>
-        <postgresql.driver.version>42.2.2</postgresql.driver.version>
+        <postgresql.driver.version>42.7.4</postgresql.driver.version>
         <postgresql.driver.name>org.postgresql.Driver</postgresql.driver.name>
         <sql.path>${basedir}/src/main/resources/sql</sql.path>
     </properties>
@@ -35,7 +35,7 @@
                 <artifactId>maven-resources-plugin</artifactId>
 
 
-                <version>2.7</version>
+                <version>3.3.1</version>
                 <configuration>
                     <delimiters>
                         <delimiter>@</delimiter>
@@ -71,7 +71,7 @@
                     <dependency>
                         <groupId>org.postgresql</groupId>
                         <artifactId>postgresql</artifactId>
-                        <version>42.2.2.jre7</version>
+                        <version>${postgresql.driver.version}</version>
                         <scope>runtime</scope>
                     </dependency>
 
